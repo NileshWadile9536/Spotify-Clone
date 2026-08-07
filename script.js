@@ -61,8 +61,8 @@ const playMusic = (track, pause = false) => {
 async function main() {
 
     // get the list of all the songs
-    songs = await getSongs()
-    playMusic(songs[0], true)
+    // songs = await getSongs()
+    // playMusic(songs[0], true)
 
     let albums = await getAlbums();
     console.log(albums);
@@ -262,12 +262,13 @@ async function main() {
     document.querySelectorAll(".card").forEach(card => {
         card.addEventListener("click", async () => {
             let folder = card.dataset.folder;
+            console.log(folder);
             currentFolder = folder;
-            // songs = await getSongs(folder);                                    
+            songs = await getSongs(folder);                                    
             document.getElementById("libraryTitle").innerText =
                 "Your Library: " + card.querySelector("h2").innerText;
 
-            songs = await getSongs(folder);
+            // songs = await getSongs(folder);
             let songUL = document.querySelector(".songList ul");
             songUL.innerHTML = "";
             for (const song of songs) {
