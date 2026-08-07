@@ -1,0 +1,8 @@
+# Ignore all mp3 files
+*.mp3
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore node modules (agar future me use karoge)
+node_modules/
