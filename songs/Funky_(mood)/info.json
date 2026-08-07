@@ -1,4 +1,8 @@
 {
     "title": "GO Funky",
-    "description": "Let's go Funky"
+    "description": "Let's go Funky",
+    "songs": [
+    "Gehra Hua.mp3",
+    "Kesariya.mp3"
+  ]
 }

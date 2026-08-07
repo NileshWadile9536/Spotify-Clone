@@ -18,26 +18,32 @@ async function getAlbums() {
     return albums;
 }
 
-async function getSongs(folder) {
+// async function getSongs(folder) {
 
-    // let a = await fetch("http://127.0.0.1:3000/songs/")
-    let a = await fetch(`/songs/${folder}/`)
-    let response = await a.text();
-    let div = document.createElement("div")
-    div.innerHTML = response;
-    let as = div.getElementsByTagName("a")
-    let songs = []
-    for (let index = 0; index < as.length; index++) {
-        const element = as[index];
-        if (element.href.endsWith(".mp3")) {
-            songs.push(decodeURIComponent(element.href)
-                .replace(/\\/g, "/")
-                .split("/")
-                .pop()
-            );
-        }
-    }
-    return songs
+//     let a = await fetch("http://127.0.0.1:3000/songs/")
+//     let a = await fetch(`/songs/${folder}/`)
+//     let response = await a.text();
+//     let div = document.createElement("div")
+//     div.innerHTML = response;
+//     let as = div.getElementsByTagName("a")
+//     let songs = []
+//     for (let index = 0; index < as.length; index++) {
+//         const element = as[index];
+//         if (element.href.endsWith(".mp3")) {
+//             songs.push(decodeURIComponent(element.href)
+//                 .replace(/\\/g, "/")
+//                 .split("/")
+//                 .pop()
+//             );
+//         }
+//     }
+//     return songs
+// }
+
+async function getSongs(folder) {
+    let a = await fetch(`/songs/${folder}/info.json`);
+    let info = await a.json();
+    return info.songs;
 }
 
 const playMusic = (track, pause = false) => {
@@ -55,8 +61,8 @@ const playMusic = (track, pause = false) => {
 async function main() {
 
     // get the list of all the songs
-    // songs = await getSongs()
-    // playMusic(songs[0], true)
+    songs = await getSongs()
+    playMusic(songs[0], true)
 
     let albums = await getAlbums();
     console.log(albums);
@@ -75,7 +81,7 @@ async function main() {
     <p>${album.description}</p>
 </div>
 `;
-}
+    }
 
     // async function getAlbums() {
     //     let a = await fetch("/songs/");
@@ -193,6 +199,7 @@ async function main() {
         console.log(currentSong);
         // let index = songs.indexOf(currentSong.src.split("/"). slice(-1) [0])
         // let index = songs.indexOf(decodeURIComponent(currentSong.src.split("/").pop()));
+        // let currentTrack = decodeURIComponent(currentSong.src.split("/").pop());
         let currentTrack = decodeURIComponent(currentSong.src.split("/").pop());
         let index = songs.indexOf(currentTrack);
         if ((index - 1) >= 0) {
@@ -205,7 +212,9 @@ async function main() {
         // currentSong.pause()
         console.log("next clicked");
         // let index = songs.indexOf(currentSong.src.split("/"). slice(-1) [0])
-        let index = songs.indexOf(decodeURIComponent(currentSong.src.split("/").pop()));
+        // let index = songs.indexOf(decodeURIComponent(currentSong.src.split("/").pop()));
+        let currentTrack = decodeURIComponent(currentSong.src.split("/").pop());
+        let index = songs.indexOf(currentTrack);
         if ((index + 1) < songs.length) {
             playMusic(songs[index + 1])
         }
@@ -254,6 +263,7 @@ async function main() {
         card.addEventListener("click", async () => {
             let folder = card.dataset.folder;
             currentFolder = folder;
+            // songs = await getSongs(folder);                                    
             document.getElementById("libraryTitle").innerText =
                 "Your Library: " + card.querySelector("h2").innerText;
 

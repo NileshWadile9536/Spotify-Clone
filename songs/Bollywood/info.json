@@ -1,4 +1,8 @@
 {
     "title": "Bollywood",
-    "description": "Bhajans and Devotional Songs"
+    "description": "Bhajans and Devotional Songs",
+    "songs": [
+    "Gehra Hua.mp3",
+    "Kesariya.mp3"
+  ]
 }

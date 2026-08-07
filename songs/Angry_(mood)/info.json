@@ -1,5 +1,9 @@
 {
     "title": "Angry Mood",
     "description": "Calm your Anger",
-    "cover": "cover.jpg"
+    "cover": "cover.jpg",
+    "songs": [
+    "Gehra Hua.mp3",
+    "Kesariya.mp3"
+  ]
 }
