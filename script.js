@@ -1,7 +1,7 @@
 
-let currentFolder = "";
 let currentSong = new Audio();
 let songs;
+let currentFolder = "";
 
 // async function getAlbums() {
 //     let folders = await fetch("/songs/songs.json");
@@ -67,19 +67,27 @@ async function getAlbums() {
 //     return songs
 // }
 
+
+// async function getSongs(folder) {
+//     let a = await fetch(`/songs/${folder}/info.json`);
+//     let info = await a.json();
+//     return info.songs;
+// }
+
 async function getSongs(folder) {
-    let a = await fetch(`/songs/${folder}/info.json`);
-    let info = await a.json();
+    let response = await fetch(`/songs/${encodeURIComponent(folder)}/info.json`);
+    let info = await response.json();
     return info.songs;
 }
 
 const playMusic = (track, pause = false) => {
-    currentSong.src = `/songs/${currentFolder}/${track}`;
+    // currentSong.src = `/songs/${currentFolder}/${track}`;
+    currentSong.src = `/songs/${encodeURIComponent(currentFolder)}/${encodeURIComponent(track)}`;
     if (!pause) {
         currentSong.play();
         play.src = "pause.svg";
     }
-    document.querySelector(".songinfo").innerHTML = decodeURIComponent(track);
+    document.querySelector(".songinfo").innerHTML = (track);
     // document.querySelector(".songtime").innerHTML = "00:00 / 00:00"
     document.querySelector(".currentTime").innerHTML = "00:00";
     document.querySelector(".totalTime").innerHTML = "00:00";
@@ -108,7 +116,7 @@ async function main() {
     <p>${album.description}</p>
 </div>
 `;
-}
+    }
 
     // async function getAlbums() {
     //     let a = await fetch("/songs/");
@@ -286,43 +294,74 @@ async function main() {
     //     });
     // });
 
+    // document.querySelectorAll(".card").forEach(card => {
+    //     card.addEventListener("click", async () => {
+    //         let folder = card.dataset.folder;
+    //         console.log(folder);
+    //         currentFolder = folder;
+    //         songs = await getSongs(folder);
+    //         document.getElementById("libraryTitle").innerText =
+    //             "Your Library: " + card.querySelector("h2").innerText;
+
+    //         // songs = await getSongs(folder);
+    //         let songUL = document.querySelector(".songList ul");
+    //         songUL.innerHTML = "";
+    //         for (const song of songs) {
+    //             songUL.innerHTML += `
+    //             <li>
+    //                 <img src="music.svg">
+    //                 <div class="info">
+    //                     <div>${song}</div>
+    //                     <div>Unknown Artist</div>
+    //                 </div>
+    //                 <div class="playnow">
+    //                     <span>Play Now</span>
+    //                     <img class="invert" src="play.svg">
+    //                 </div>
+    //             </li>
+    //         `;
+    //         }
+
+    //         Array.from(songUL.getElementsByTagName("li")).forEach(li => {
+    //             li.addEventListener("click", () => {
+    //                 let track = li.querySelector(".info div").innerText.trim();
+
+    //                 // currentSong.src = `/songs/${folder}/${track}`;
+    //                 playMusic(track);
+    //                 // currentSong.play();
+    //                 play.src = "pause.svg";
+    //                 document.querySelector(".songinfo").innerText = track;
+    //             });
+    //         });
+    //     });
+    // });
+
     document.querySelectorAll(".card").forEach(card => {
         card.addEventListener("click", async () => {
-            let folder = card.dataset.folder;
-            console.log(folder);
-            currentFolder = folder;
-            songs = await getSongs(folder);                                    
-            document.getElementById("libraryTitle").innerText =
-                "Your Library: " + card.querySelector("h2").innerText;
-
-            // songs = await getSongs(folder);
+            currentFolder = card.dataset.folder;
+            songs = await getSongs(currentFolder);
             let songUL = document.querySelector(".songList ul");
             songUL.innerHTML = "";
             for (const song of songs) {
                 songUL.innerHTML += `
                 <li>
-                    <img src="music.svg">
+                    <img src="music.svg" alt="">
                     <div class="info">
                         <div>${song}</div>
                         <div>Unknown Artist</div>
                     </div>
                     <div class="playnow">
                         <span>Play Now</span>
-                        <img class="invert" src="play.svg">
+                        <img class="invert" src="play.svg" alt="">
                     </div>
                 </li>
             `;
             }
-
             Array.from(songUL.getElementsByTagName("li")).forEach(li => {
                 li.addEventListener("click", () => {
-                    let track = li.querySelector(".info div").innerText.trim();
-
-                    // currentSong.src = `/songs/${folder}/${track}`;
-                    playMusic(track);
-                    // currentSong.play();
-                    play.src = "pause.svg";
-                    document.querySelector(".songinfo").innerText = track;
+                    let songName =
+                        li.querySelector(".info").firstElementChild.innerHTML;
+                    playMusic(songName);
                 });
             });
         });
