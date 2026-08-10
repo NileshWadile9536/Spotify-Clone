@@ -3,16 +3,43 @@ let currentFolder = "";
 let currentSong = new Audio();
 let songs;
 
+// async function getAlbums() {
+//     let folders = await fetch("/songs/songs.json");
+//     folders = await folders.json();
+//     let albums = [];
+//     for (const folder of folders) {
+//         let info = await fetch(`/songs/${folder}/info.json`);
+//         info = await info.json();
+//         albums.push({
+//             folder: folder,
+//             ...info
+//         });
+//     }
+//     return albums;
+// }
+
 async function getAlbums() {
-    let folders = await fetch("/songs/songs.json");
-    folders = await folders.json();
+    let response = await fetch("/songs/songs.json");
+    if (!response.ok) {
+        throw new Error("songs.json not found: " + response.status);
+    }
+    let folders = await response.json();
     let albums = [];
     for (const folder of folders) {
-        let info = await fetch(`/songs/${folder}/info.json`);
-        info = await info.json();
+        let infoResponse = await fetch(
+            `/songs/${encodeURIComponent(folder)}/info.json`
+        );
+        if (!infoResponse.ok) {
+            console.error(
+                `info.json not found for folder: ${folder}`
+            );
+            continue;
+        }
+        let info = await infoResponse.json();
         albums.push({
             folder: folder,
-            ...info
+            title: info.title,
+            description: info.description
         });
     }
     return albums;
@@ -76,12 +103,12 @@ async function main() {
             <path d="M20 15 L20 35 L36 25 Z" fill="black"/>
         </svg>
     </div>
-    <img src="/songs/${album.folder}/cover.jpg" alt="">
+    <img src="/songs/${encodeURIComponent(album.folder)}/cover.jpg" alt="">
     <h2>${album.title}</h2>
     <p>${album.description}</p>
 </div>
 `;
-    }
+}
 
     // async function getAlbums() {
     //     let a = await fetch("/songs/");
